@@ -510,8 +510,12 @@ tools/
 docs/
   DESIGN.md       設計書
   USAGE.md        クイックリファレンス
+  preview*.png    スクリーンショット
 assets/
   icon.ico        アプリアイコン
+.github/
+  workflows/build.yml  CI（ビルド + selftest + 単一 exe 生成）
+LICENSE
 ```
 
 ---
@@ -521,7 +525,7 @@ assets/
 MIT License
 
 ```
-Copyright (c) 2026 MemEco Project
+Copyright (c) 2026 Madoa5561
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

@@ -37,11 +37,14 @@ jobs:
       - name: Self test
         shell: pwsh
         run: |
-          $exe = '.\src\MemEco.App\bin\Release\net9.0-windows\MemEco.exe'
-          & $exe --selftest .\selftest.txt
-          if ($LASTEXITCODE -ne 0) { throw "selftest failed: $LASTEXITCODE" }
-          Get-Content .\selftest.txt
-          $text = Get-Content .\selftest.txt -Raw
+          # WPF はコンソールを持たない WinExe のため、`&` では終了を待たない。
+          # Start-Process -Wait で終了コードを取得する。
+          $exe = (Resolve-Path '.\src\MemEco.App\bin\Release\net9.0-windows\MemEco.exe').Path
+          $out = Join-Path (Get-Location) 'selftest.txt'
+          $p = Start-Process -FilePath $exe -ArgumentList @('--selftest', $out) -PassThru -Wait
+          if ($p.ExitCode -ne 0) { throw "selftest failed: $($p.ExitCode)" }
+          Get-Content -LiteralPath $out -Encoding UTF8
+          $text = Get-Content -LiteralPath $out -Raw -Encoding UTF8
           if ($text -notmatch '完了') { throw 'selftest output is incomplete' }
 
       - name: Upload exe artifact
