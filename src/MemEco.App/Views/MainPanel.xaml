@@ -1,0 +1,483 @@
+<UserControl x:Class="MemEco.App.Views.MainPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ctl="clr-namespace:MemEco.App.Views.Controls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DesignWidth="440" d:DesignHeight="680"
+             Width="440" Height="680"
+             FontFamily="{StaticResource FontText}"
+             SnapsToDevicePixels="True">
+
+  <!-- ============ エコ対象アプリの行 ============ -->
+  <UserControl.Resources>
+
+    <Style x:Key="RowDot" TargetType="Ellipse">
+      <Setter Property="Width" Value="6" />
+      <Setter Property="Height" Value="6" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+      <Setter Property="Fill" Value="{StaticResource MintBrush}" />
+    </Style>
+
+    <Style x:Key="RowBadge" TargetType="Border">
+      <Setter Property="CornerRadius" Value="5" />
+      <Setter Property="Padding" Value="5,1" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+      <Setter Property="Background" Value="#224ADE80" />
+      <Setter Property="BorderBrush" Value="#664ADE80" />
+      <Setter Property="BorderThickness" Value="1" />
+    </Style>
+
+    <Style x:Key="RowBadgeText" TargetType="TextBlock">
+      <Setter Property="FontSize" Value="8.5" />
+      <Setter Property="Foreground" Value="{StaticResource MintBrush}" />
+    </Style>
+
+    <DataTemplate x:Key="ProcessRowTemplate">
+      <Grid Height="29" Background="Transparent">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <Ellipse Grid.Column="0">
+          <Ellipse.Style>
+            <Style TargetType="Ellipse" BasedOn="{StaticResource RowDot}">
+              <Style.Triggers>
+                <DataTrigger Binding="{Binding StateKey}" Value="trim">
+                  <Setter Property="Fill" Value="{StaticResource CyanBrush}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding StateKey}" Value="suspend">
+                  <Setter Property="Fill" Value="{StaticResource AmberBrush}" />
+                </DataTrigger>
+              </Style.Triggers>
+            </Style>
+          </Ellipse.Style>
+        </Ellipse>
+
+        <TextBlock Grid.Column="1" Text="{Binding Name}" Margin="8,0,6,0" VerticalAlignment="Center"
+                   FontSize="10.5" TextTrimming="CharacterEllipsis" ToolTip="{Binding Detail}" />
+
+        <Border Grid.Column="2">
+          <Border.Style>
+            <Style TargetType="Border" BasedOn="{StaticResource RowBadge}">
+              <Style.Triggers>
+                <DataTrigger Binding="{Binding StateKey}" Value="trim">
+                  <Setter Property="Background" Value="#2222D3EE" />
+                  <Setter Property="BorderBrush" Value="#6622D3EE" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding StateKey}" Value="suspend">
+                  <Setter Property="Background" Value="#22FBBF24" />
+                  <Setter Property="BorderBrush" Value="#66FBBF24" />
+                </DataTrigger>
+              </Style.Triggers>
+            </Style>
+          </Border.Style>
+          <TextBlock Text="{Binding Badge}">
+            <TextBlock.Style>
+              <Style TargetType="TextBlock" BasedOn="{StaticResource RowBadgeText}">
+                <Style.Triggers>
+                  <DataTrigger Binding="{Binding StateKey}" Value="trim">
+                    <Setter Property="Foreground" Value="{StaticResource CyanBrush}" />
+                  </DataTrigger>
+                  <DataTrigger Binding="{Binding StateKey}" Value="suspend">
+                    <Setter Property="Foreground" Value="{StaticResource AmberBrush}" />
+                  </DataTrigger>
+                </Style.Triggers>
+              </Style>
+            </TextBlock.Style>
+          </TextBlock>
+        </Border>
+
+        <TextBlock Grid.Column="3" Text="{Binding ReclaimedText}" Margin="8,0,0,0" VerticalAlignment="Center"
+                   FontSize="9.5" Foreground="{StaticResource MutedTextBrush}" />
+      </Grid>
+    </DataTemplate>
+
+  </UserControl.Resources>
+
+  <Border x:Name="RootBorder" CornerRadius="18" Background="{StaticResource PanelBackground}"
+          BorderBrush="#FF243149" BorderThickness="1" ClipToBounds="True">
+    <Grid>
+      <!-- 環境光（控えめなグロー） -->
+      <Ellipse Width="340" Height="340" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-90,-60,0"
+               IsHitTestVisible="False">
+        <Ellipse.Fill>
+          <RadialGradientBrush>
+            <GradientStop Color="#2422D3EE" Offset="0" />
+            <GradientStop Color="#0022D3EE" Offset="1" />
+          </RadialGradientBrush>
+        </Ellipse.Fill>
+      </Ellipse>
+      <Ellipse Width="300" Height="300" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="-70,0,0,-90"
+               IsHitTestVisible="False">
+        <Ellipse.Fill>
+          <RadialGradientBrush>
+            <GradientStop Color="#204ADE80" Offset="0" />
+            <GradientStop Color="#004ADE80" Offset="1" />
+          </RadialGradientBrush>
+        </Ellipse.Fill>
+      </Ellipse>
+
+      <Grid Margin="16,12,16,12">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="28" />
+          <RowDefinition Height="138" />
+          <RowDefinition Height="126" />
+          <RowDefinition Height="100" />
+          <RowDefinition Height="46" />
+          <RowDefinition Height="52" />
+          <RowDefinition Height="*" />
+          <RowDefinition Height="20" />
+        </Grid.RowDefinitions>
+
+        <!-- ================= 1. ヘッダー ================= -->
+        <Grid Grid.Row="0" Background="Transparent" MouseLeftButtonDown="Header_MouseLeftButtonDown">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+          </Grid.ColumnDefinitions>
+
+          <Border Grid.Column="0" Width="26" Height="26" CornerRadius="8" Background="{StaticResource AccentGradient}">
+            <Grid Width="14" Height="14">
+              <Rectangle RadiusX="2.5" RadiusY="2.5" Stroke="#FF062018" StrokeThickness="1.5" />
+              <Rectangle Width="4.5" Height="4.5" RadiusX="1" RadiusY="1" Fill="#FF062018"
+                         HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Grid>
+          </Border>
+
+          <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="9,0,0,0">
+            <TextBlock Text="MemEco" Style="{StaticResource PanelTitle}" VerticalAlignment="Center" />
+            <Border Margin="8,0,0,0" VerticalAlignment="Center" CornerRadius="5" Background="#FF1A2740"
+                    BorderBrush="#FF2C3C57" BorderThickness="1" Padding="5,1">
+              <TextBlock Text="メモリエコ" FontSize="8.5" Foreground="{StaticResource SubTextBrush}" />
+            </Border>
+          </StackPanel>
+
+          <Button Grid.Column="2" Style="{StaticResource IconButton}" Click="OpenSettings_Click"
+                  ToolTip="設定" AutomationProperties.Name="設定を開く">
+            <Grid Width="15" Height="15">
+              <Path Data="M1,4.5 H14" StrokeThickness="1.4" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                    Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
+              <Path Data="M1,10.5 H14" StrokeThickness="1.4" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                    Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
+              <Ellipse Width="3.8" Height="3.8" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8.6,2.6,0,0"
+                       Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
+              <Ellipse Width="3.8" Height="3.8" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3.6,8.6,0,0"
+                       Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
+            </Grid>
+          </Button>
+
+          <Button Grid.Column="3" Style="{StaticResource IconButton}" Click="Close_Click" Margin="2,0,0,0"
+                  ToolTip="トレイに格納 (Esc)" AutomationProperties.Name="閉じる">
+            <Path Data="M0.5,0.5 L9.5,9.5 M9.5,0.5 L0.5,9.5" Width="10" Height="10" Stretch="Uniform"
+                  StrokeThickness="1.4" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                  Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
+          </Button>
+        </Grid>
+
+        <!-- ================= 2. プレッシャーリング ================= -->
+        <Border Grid.Row="1" Style="{StaticResource Card}" Margin="0,8,0,0" Padding="12,10">
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0" Width="108" Height="108">
+              <ctl:PressureRing x:Name="RingControl" Score="{Binding Score}" Level="{Binding Level}" />
+              <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <TextBlock Style="{StaticResource RingStatus}" Text="{Binding StatusWord}" />
+                <TextBlock FontFamily="{StaticResource FontDisplay}" FontSize="23" FontWeight="Bold"
+                           HorizontalAlignment="Center" Margin="0,0,0,0"
+                           Text="{Binding ElementName=RingControl, Path=AnimatedScore, StringFormat={}{0:F0}%}"
+                           Visibility="{Binding HasData, Converter={StaticResource BoolToVis}}" />
+                <TextBlock FontFamily="{StaticResource FontDisplay}" FontSize="23" FontWeight="Bold"
+                           HorizontalAlignment="Center" Text="—" Foreground="{StaticResource MutedTextBrush}"
+                           Visibility="{Binding HasNoData, Converter={StaticResource BoolToVis}}" />
+                <TextBlock Text="{Binding StatusCaption}" FontSize="8.5" HorizontalAlignment="Center"
+                           Foreground="{StaticResource MutedTextBrush}" Margin="0,-1,0,0" />
+              </StackPanel>
+            </Grid>
+
+            <Grid Grid.Column="1" Margin="14,0,0,0">
+              <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="9" />
+                <RowDefinition Height="Auto" />
+              </Grid.RowDefinitions>
+
+              <TextBlock Grid.Row="0" Text="{Binding AvailableCaption}" FontSize="10"
+                         Foreground="{StaticResource MutedTextBrush}" />
+              <TextBlock Grid.Row="1" Text="{Binding AvailableText}" Style="{StaticResource Number}" FontSize="24"
+                         Margin="0,-2,0,0" />
+              <TextBlock Grid.Row="2" Text="{Binding TotalCaptionText}" FontSize="9.5"
+                         Foreground="{StaticResource SubTextBrush}" />
+
+              <Border Grid.Row="3" Height="1" Background="#FF1E2A41" VerticalAlignment="Bottom"
+                      Margin="0,0,0,7" />
+
+              <Grid Grid.Row="4" VerticalAlignment="Bottom">
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="*" />
+                  <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="コミット" FontSize="9.5" Foreground="{StaticResource MutedTextBrush}" />
+                <TextBlock Grid.Column="1" Text="{Binding CommitPercentText}" FontSize="9.5"
+                           Foreground="{StaticResource SubTextBrush}" />
+              </Grid>
+              <ctl:MeterBar Grid.Row="5" Value="{Binding CommitRatio}" Margin="0,2,0,2" />
+              <TextBlock Grid.Row="6" Text="{Binding CommitText}" FontSize="8.5"
+                         Foreground="{StaticResource MutedTextBrush}" />
+            </Grid>
+          </Grid>
+        </Border>
+
+        <!-- ================= 3. メモリ内訳 + スパークライン ================= -->
+        <Border Grid.Row="2" Style="{StaticResource Card}" Margin="0,8,0,0" Padding="12,9">
+          <Grid>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="18" />
+              <RowDefinition Height="18" />
+              <RowDefinition Height="18" />
+              <RowDefinition Height="7" />
+              <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+              <TextBlock Text="メモリ内訳" Style="{StaticResource SectionTitle}" VerticalAlignment="Center" />
+              <TextBlock Text="{Binding UsedPercentText}" HorizontalAlignment="Right" VerticalAlignment="Center"
+                         FontSize="9.5" Foreground="{StaticResource MutedTextBrush}" />
+            </Grid>
+
+            <ctl:StackedBar Grid.Row="1" Height="10" Margin="0,4,0,2" VerticalAlignment="Top"
+                            UsedRatio="{Binding UsedRatio}" CacheRatio="{Binding CacheRatio}" />
+
+            <Grid Grid.Row="2" Margin="0,2,0,0">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+              </Grid.ColumnDefinitions>
+              <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                <Border Width="7" Height="7" CornerRadius="2" Background="{StaticResource AccentGradientHorizontal}" />
+                <TextBlock Text="{Binding UsedLegend}" FontSize="9" Margin="5,0,0,0"
+                           Foreground="{StaticResource SubTextBrush}" VerticalAlignment="Center" />
+              </StackPanel>
+              <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                <Border Width="7" Height="7" CornerRadius="2" Background="#FF334766" />
+                <TextBlock Text="{Binding CacheLegend}" FontSize="9" Margin="5,0,0,0"
+                           Foreground="{StaticResource SubTextBrush}" VerticalAlignment="Center" />
+              </StackPanel>
+              <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                <Border Width="7" Height="7" CornerRadius="2" Background="{StaticResource TrackBrush}" />
+                <TextBlock Text="{Binding FreeLegend}" FontSize="9" Margin="5,0,0,0"
+                           Foreground="{StaticResource SubTextBrush}" VerticalAlignment="Center" />
+              </StackPanel>
+            </Grid>
+
+            <Border Grid.Row="3" Height="1" Background="#FF1E2A41" Margin="0,3" VerticalAlignment="Center" />
+
+            <Grid Grid.Row="4">
+              <Grid.RowDefinitions>
+                <RowDefinition Height="13" />
+                <RowDefinition Height="*" />
+              </Grid.RowDefinitions>
+              <TextBlock Grid.Row="0" Text="利用可能メモリの推移" FontSize="9" Foreground="{StaticResource MutedTextBrush}" />
+              <TextBlock Grid.Row="0" Text="直近 60 サンプル" FontSize="8.5" HorizontalAlignment="Right"
+                         Foreground="{StaticResource MutedTextBrush}" />
+              <ctl:Sparkline Grid.Row="1" Points="{Binding History}" Stroke="{StaticResource MintBrush}"
+                             Margin="0,1,0,0" />            </Grid>
+          </Grid>
+        </Border>
+
+        <!-- ================= 4. 全自動トグル + プリセット ================= -->
+        <Border Grid.Row="3" Style="{StaticResource Card}" Margin="0,8,0,0" Padding="12,8">
+          <Grid>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="36" />
+              <RowDefinition Height="8" />
+              <RowDefinition Height="26" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+              <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="全自動メモリ管理" FontSize="12.5" FontWeight="SemiBold" />
+                <TextBlock Text="バックグラウンドで自動的に最適化します" FontSize="9"
+                           Foreground="{StaticResource MutedTextBrush}" Margin="0,1,0,0" />
+              </StackPanel>
+              <CheckBox Style="{StaticResource ToggleSwitch}" HorizontalAlignment="Right" VerticalAlignment="Center"
+                        IsChecked="{Binding AutoManage, Mode=TwoWay}"
+                        AutomationProperties.Name="全自動メモリ管理" />
+            </Grid>
+
+            <Border Grid.Row="2" Background="{StaticResource SegmentBgBrush}" CornerRadius="10" Padding="3">
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="*" />
+                  <ColumnDefinition Width="*" />
+                  <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <RadioButton Grid.Column="0" GroupName="MainPreset" Style="{StaticResource SegmentRadio}"
+                             Content="やさしい" Tag="Gentle" Checked="Preset_Checked"
+                             IsChecked="{Binding Preset, Converter={StaticResource EnumEquals}, ConverterParameter=Gentle, Mode=OneWay}" />
+                <RadioButton Grid.Column="1" GroupName="MainPreset" Style="{StaticResource SegmentRadio}"
+                             Content="標準" Tag="Balanced" Checked="Preset_Checked"
+                             IsChecked="{Binding Preset, Converter={StaticResource EnumEquals}, ConverterParameter=Balanced, Mode=OneWay}" />
+                <RadioButton Grid.Column="2" GroupName="MainPreset" Style="{StaticResource SegmentRadio}"
+                             Content="積極的" Tag="Aggressive" Checked="Preset_Checked"
+                             IsChecked="{Binding Preset, Converter={StaticResource EnumEquals}, ConverterParameter=Aggressive, Mode=OneWay}" />
+              </Grid>
+            </Border>
+          </Grid>
+        </Border>
+
+        <!-- ================= 5. アクション ================= -->
+        <Grid Grid.Row="4" Margin="0,8,0,0">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5*" />
+            <ColumnDefinition Width="8" />
+            <ColumnDefinition Width="3*" />
+          </Grid.ColumnDefinitions>
+
+          <Button Grid.Column="0" Style="{StaticResource PrimaryButton}" Content="{Binding ReclaimButtonText}"
+                  IsEnabled="{Binding IsNotBusy}" Click="Reclaim_Click" AutomationProperties.Name="今すぐ解放" />
+
+          <Button Grid.Column="2" Content="スタンバイも解放"
+                  IsEnabled="{Binding CanPurgeStandby}" Click="Purge_Click"
+                  AutomationProperties.Name="スタンバイも解放">
+            <Button.Style>
+              <Style TargetType="Button" BasedOn="{StaticResource SecondaryButton}">
+                <Setter Property="ToolTip" Value="スタンバイリストを解放します（管理者モード）" />
+                <Style.Triggers>
+                  <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="ToolTip" Value="スタンバイ解放は管理者モードでのみ利用できます" />
+                  </Trigger>
+                </Style.Triggers>
+              </Style>
+            </Button.Style>
+          </Button>
+        </Grid>
+
+        <!-- ================= 6. 実績 ================= -->
+        <Grid Grid.Row="5" Margin="0,8,0,0">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="7" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="7" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="7" />
+            <ColumnDefinition Width="*" />
+          </Grid.ColumnDefinitions>
+
+          <Border Grid.Column="0" Style="{StaticResource StatCard}">
+            <StackPanel>
+              <TextBlock Text="本日解放" Style="{StaticResource StatLabel}" />
+              <TextBlock Text="{Binding TodayReclaimedText}" Style="{StaticResource StatValue}" Margin="0,1,0,0" />
+            </StackPanel>
+          </Border>
+          <Border Grid.Column="2" Style="{StaticResource StatCard}">
+            <StackPanel>
+              <TextBlock Text="セッション合計" Style="{StaticResource StatLabel}" />
+              <TextBlock Text="{Binding SessionReclaimedText}" Style="{StaticResource StatValue}" Margin="0,1,0,0" />
+            </StackPanel>
+          </Border>
+          <Border Grid.Column="4" Style="{StaticResource StatCard}">
+            <StackPanel>
+              <TextBlock Text="エコ管理中" Style="{StaticResource StatLabel}" />
+              <TextBlock Text="{Binding EcoCountText}" Style="{StaticResource StatValue}" Margin="0,1,0,0" />
+            </StackPanel>
+          </Border>
+          <Border Grid.Column="6" Style="{StaticResource StatCard}">
+            <StackPanel>
+              <TextBlock Text="一時停止中" Style="{StaticResource StatLabel}" />
+              <TextBlock Text="{Binding SuspendCountText}" Style="{StaticResource StatValue}" Margin="0,1,0,0" />
+            </StackPanel>
+          </Border>
+        </Grid>
+
+        <!-- ================= 7. エコ対象アプリ ================= -->
+        <Border Grid.Row="6" Style="{StaticResource Card}" Margin="0,8,0,0" Padding="12,8">
+          <Grid>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="18" />
+              <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+              <TextBlock Text="エコ対象のアプリ" Style="{StaticResource SectionTitle}" VerticalAlignment="Center" />
+              <TextBlock Text="{Binding ManagedCountText}" HorizontalAlignment="Right" VerticalAlignment="Center"
+                         FontSize="9" Foreground="{StaticResource MutedTextBrush}" />
+            </Grid>
+
+            <Grid Grid.Row="1" Margin="0,3,0,0">
+              <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <ItemsControl ItemsSource="{Binding Processes}" ItemTemplate="{StaticResource ProcessRowTemplate}" />
+              </ScrollViewer>
+
+              <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
+                          Visibility="{Binding HasProcesses, Converter={StaticResource InverseBoolToVis}}">
+                <Grid Width="30" Height="30" HorizontalAlignment="Center">
+                  <Border CornerRadius="9" Background="#FF17233A" BorderBrush="#FF2A3A55" BorderThickness="1" />
+                  <Grid Width="14" Height="14">
+                    <Rectangle RadiusX="2.5" RadiusY="2.5" Stroke="#FF4A5E80" StrokeThickness="1.4" />
+                    <Rectangle Width="4" Height="4" RadiusX="1" RadiusY="1" Fill="#FF4A5E80"
+                               HorizontalAlignment="Center" VerticalAlignment="Center" />
+                  </Grid>
+                </Grid>
+                <TextBlock Text="{Binding ProcessEmptyText}" FontSize="9.5" HorizontalAlignment="Center"
+                           Margin="0,7,0,0" Foreground="{StaticResource SubTextBrush}" />
+                <TextBlock Text="アプリを最小化すると、自動でエコ対象になります" FontSize="8.5"
+                           HorizontalAlignment="Center" Margin="0,2,0,0"
+                           Foreground="{StaticResource MutedTextBrush}" />
+              </StackPanel>
+            </Grid>
+          </Grid>
+        </Border>
+
+        <!-- ================= 8. フッター ================= -->
+        <Grid Grid.Row="7" Margin="0,8,0,0">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+          </Grid.ColumnDefinitions>
+
+          <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+            <Ellipse Width="6" Height="6" VerticalAlignment="Center">
+              <Ellipse.Style>
+                <Style TargetType="Ellipse">
+                  <Setter Property="Fill" Value="{StaticResource MutedTextBrush}" />
+                  <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsAdmin}" Value="True">
+                      <Setter Property="Fill" Value="{StaticResource MintBrush}" />
+                    </DataTrigger>
+                  </Style.Triggers>
+                </Style>
+              </Ellipse.Style>
+            </Ellipse>
+            <TextBlock Text="{Binding ModeText}" FontSize="9" Margin="5,0,0,0"
+                       Foreground="{StaticResource SubTextBrush}" VerticalAlignment="Center" />
+          </StackPanel>
+
+          <TextBlock Grid.Column="1" Text="{Binding StatusLine}" FontSize="8.5" Margin="12,0,8,0"
+                     Foreground="{StaticResource MutedTextBrush}" VerticalAlignment="Center"
+                     TextTrimming="CharacterEllipsis" />
+
+          <TextBlock Grid.Column="2" Text="{Binding VersionText}" FontSize="8.5"
+                     Foreground="{StaticResource MutedTextBrush}" VerticalAlignment="Center" />
+        </Grid>
+      </Grid>
+    </Grid>
+  </Border>
+</UserControl>

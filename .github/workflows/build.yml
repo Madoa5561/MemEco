@@ -1,0 +1,52 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: build (windows-x64)
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 9
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Build (Release, warnings as errors は強制しない)
+        shell: pwsh
+        run: dotnet build .\MemEco.sln -c Release --nologo
+
+      - name: Publish single-file exe (framework-dependent)
+        shell: pwsh
+        run: >
+          dotnet publish .\src\MemEco.App -c Release -r win-x64 --self-contained false
+          -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
+          -o .\publish --nologo
+
+      - name: Self test
+        shell: pwsh
+        run: |
+          $exe = '.\src\MemEco.App\bin\Release\net9.0-windows\MemEco.exe'
+          & $exe --selftest .\selftest.txt
+          if ($LASTEXITCODE -ne 0) { throw "selftest failed: $LASTEXITCODE" }
+          Get-Content .\selftest.txt
+          $text = Get-Content .\selftest.txt -Raw
+          if ($text -notmatch '完了') { throw 'selftest output is incomplete' }
+
+      - name: Upload exe artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MemEco-win-x64
+          path: publish/MemEco.exe
+          if-no-files-found: error

@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AssemblyName>MemEco.Core</AssemblyName>
+    <RootNamespace>MemEco.Core</RootNamespace>
+    <Version>1.0.0</Version>
+    <Product>MemEco</Product>
+    <Description>macOS ライクな自動メモリ管理エンジン for Windows 11</Description>
+    <InvariantGlobalization>false</InvariantGlobalization>
+  </PropertyGroup>
+
+</Project>

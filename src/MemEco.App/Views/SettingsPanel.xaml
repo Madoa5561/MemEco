@@ -1,0 +1,363 @@
+<UserControl x:Class="MemEco.App.Views.SettingsPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DesignWidth="720" d:DesignHeight="640"
+             Width="720" Height="640"
+             FontFamily="{StaticResource FontText}"
+             SnapsToDevicePixels="True">
+
+  <UserControl.Resources>
+    <Style x:Key="RowTitle" TargetType="TextBlock">
+      <Setter Property="FontSize" Value="11.5" />
+      <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+    </Style>
+    <Style x:Key="RowDesc" TargetType="TextBlock">
+      <Setter Property="FontSize" Value="9" />
+      <Setter Property="Foreground" Value="{StaticResource MutedTextBrush}" />
+      <Setter Property="Margin" Value="0,1,0,0" />
+      <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+    <Style x:Key="CardTitle" TargetType="TextBlock">
+      <Setter Property="FontSize" Value="12" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+    </Style>
+    <Style x:Key="HairLine" TargetType="Border">
+      <Setter Property="Height" Value="1" />
+      <Setter Property="Background" Value="#FF1E2A41" />
+      <Setter Property="Margin" Value="0,6" />
+    </Style>
+  </UserControl.Resources>
+
+  <Border x:Name="RootBorder" CornerRadius="18" Background="{StaticResource PanelBackground}"
+          BorderBrush="#FF243149" BorderThickness="1">
+    <Grid Margin="20,16,20,16">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="40" />
+        <RowDefinition Height="*" />
+      </Grid.RowDefinitions>
+
+      <!-- ヘッダー -->
+      <Grid Grid.Row="0" Background="Transparent" MouseLeftButtonDown="Header_MouseLeftButtonDown">
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+          <TextBlock Text="設定" Style="{StaticResource PanelTitle}" FontSize="17" VerticalAlignment="Center" />
+          <TextBlock Text="MemEco の動作をカスタマイズ" FontSize="10" Margin="12,0,0,0"
+                     Foreground="{StaticResource MutedTextBrush}" VerticalAlignment="Center" />
+        </StackPanel>
+        <Button x:Name="CloseButton" Style="{StaticResource IconButton}" HorizontalAlignment="Right"
+                VerticalAlignment="Center" Click="Close_Click" ToolTip="閉じる (Esc)"
+                AutomationProperties.Name="設定を閉じる">
+          <Path Data="M0.5,0.5 L9.5,9.5 M9.5,0.5 L0.5,9.5" Width="10" Height="10" Stretch="Uniform"
+                StrokeThickness="1.4" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
+        </Button>
+      </Grid>
+
+      <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                    Margin="0,8,0,0">
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="14" />
+            <ColumnDefinition Width="*" />
+          </Grid.ColumnDefinitions>
+
+          <!-- ================= 左カラム ================= -->
+          <StackPanel Grid.Column="0">
+
+            <!-- 自動管理 -->
+            <Border Style="{StaticResource Card}" Padding="14,12">
+              <StackPanel>
+                <Grid>
+                  <StackPanel>
+                    <TextBlock Text="全自動メモリ管理" Style="{StaticResource CardTitle}" />
+                    <TextBlock Text="バックグラウンドで自動的にメモリを最適化します" Style="{StaticResource RowDesc}" />
+                  </StackPanel>
+                  <CheckBox x:Name="AutoManageToggle" Style="{StaticResource ToggleSwitch}"
+                            HorizontalAlignment="Right" VerticalAlignment="Center"
+                            Checked="AutoManage_Changed" Unchecked="AutoManage_Changed"
+                            AutomationProperties.Name="全自動メモリ管理" />
+                </Grid>
+
+                <Border Style="{StaticResource HairLine}" Margin="0,10,0,8" />
+
+                <TextBlock Text="プリセット" FontSize="10" Foreground="{StaticResource SubTextBrush}" Margin="0,0,0,5" />
+                <Border Background="{StaticResource SegmentBgBrush}" CornerRadius="10" Padding="3" Height="30">
+                  <Grid>
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="*" />
+                      <ColumnDefinition Width="*" />
+                      <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <RadioButton x:Name="PresetGentle" Grid.Column="0" GroupName="SettingsPreset"
+                                 Style="{StaticResource SegmentRadio}" Content="やさしい" Tag="Gentle"
+                                 Checked="Preset_Changed" />
+                    <RadioButton x:Name="PresetBalanced" Grid.Column="1" GroupName="SettingsPreset"
+                                 Style="{StaticResource SegmentRadio}" Content="標準" Tag="Balanced"
+                                 Checked="Preset_Changed" />
+                    <RadioButton x:Name="PresetAggressive" Grid.Column="2" GroupName="SettingsPreset"
+                                 Style="{StaticResource SegmentRadio}" Content="積極的" Tag="Aggressive"
+                                 Checked="Preset_Changed" />
+                  </Grid>
+                </Border>
+                <TextBlock x:Name="AutoNote" Text="OFF の間は監視のみ行い、メモリ操作はしません"
+                           Style="{StaticResource RowDesc}" Margin="0,7,0,0" />
+              </StackPanel>
+            </Border>
+
+            <!-- しきい値 -->
+            <Border Style="{StaticResource Card}" Padding="14,12" Margin="0,10,0,0">
+              <StackPanel>
+                <TextBlock Text="しきい値" Style="{StaticResource CardTitle}" />
+                <TextBlock Text="空きメモリがこの割合を下回ると警告します" Style="{StaticResource RowDesc}" />
+
+                <Grid Margin="0,10,0,0">
+                  <TextBlock Text="警告" Style="{StaticResource RowTitle}" />
+                  <TextBlock x:Name="WarningValueText" Text="20%" HorizontalAlignment="Right"
+                             FontSize="11" Foreground="{StaticResource AmberBrush}" />
+                </Grid>
+                <Slider x:Name="WarningSlider" Style="{StaticResource EcoSlider}" Minimum="5" Maximum="50"
+                        TickFrequency="1" IsSnapToTickEnabled="True" Margin="0,1,0,0"
+                        ValueChanged="WarningSlider_ValueChanged" AutomationProperties.Name="警告しきい値" />
+
+                <Grid Margin="0,4,0,0">
+                  <TextBlock Text="危険" Style="{StaticResource RowTitle}" />
+                  <TextBlock x:Name="CriticalValueText" Text="10%" HorizontalAlignment="Right"
+                             FontSize="11" Foreground="{StaticResource RedBrush}" />
+                </Grid>
+                <Slider x:Name="CriticalSlider" Style="{StaticResource EcoSlider}" Minimum="1" Maximum="50"
+                        TickFrequency="1" IsSnapToTickEnabled="True" Margin="0,1,0,0"
+                        ValueChanged="CriticalSlider_ValueChanged" AutomationProperties.Name="危険しきい値" />
+
+                <TextBlock x:Name="ThresholdHint" Text="危険の値は警告より小さくしてください"
+                           Style="{StaticResource RowDesc}" Margin="0,4,0,0" />
+              </StackPanel>
+            </Border>
+
+            <!-- 機能 -->
+            <Border Style="{StaticResource Card}" Padding="14,12" Margin="0,10,0,0">
+              <StackPanel>
+                <TextBlock Text="機能" Style="{StaticResource CardTitle}" />
+
+                <Grid Height="38" Margin="0,8,0,0">
+                  <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="EcoQoS（効率モード）" Style="{StaticResource RowTitle}" />
+                    <TextBlock Text="背面アプリを省電力状態にします" Style="{StaticResource RowDesc}" />
+                  </StackPanel>
+                  <CheckBox x:Name="EcoQosToggle" Style="{StaticResource ToggleSwitch}" HorizontalAlignment="Right"
+                            VerticalAlignment="Center" Checked="Feature_Changed" Unchecked="Feature_Changed"
+                            AutomationProperties.Name="EcoQoS" />
+                </Grid>
+                <Border Style="{StaticResource HairLine}" Margin="0,2" />
+
+                <Grid Height="38">
+                  <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="ワーキングセットのトリム" Style="{StaticResource RowTitle}" />
+                    <TextBlock Text="使われていないメモリを実際に解放します" Style="{StaticResource RowDesc}" />
+                  </StackPanel>
+                  <CheckBox x:Name="TrimToggle" Style="{StaticResource ToggleSwitch}" HorizontalAlignment="Right"
+                            VerticalAlignment="Center" Checked="Feature_Changed" Unchecked="Feature_Changed"
+                            AutomationProperties.Name="ワーキングセットのトリム" />
+                </Grid>
+                <Border Style="{StaticResource HairLine}" Margin="0,2" />
+
+                <Grid Height="38">
+                  <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="スタンバイリストの解放" Style="{StaticResource RowTitle}" />
+                    <TextBlock x:Name="StandbyDesc" Text="要 管理者モード" Style="{StaticResource RowDesc}" />
+                  </StackPanel>
+                  <CheckBox x:Name="StandbyToggle" Style="{StaticResource ToggleSwitch}" HorizontalAlignment="Right"
+                            VerticalAlignment="Center" Checked="Feature_Changed" Unchecked="Feature_Changed"
+                            AutomationProperties.Name="スタンバイリストの解放" />
+                </Grid>
+                <Border Style="{StaticResource HairLine}" Margin="0,2" />
+
+                <Grid Height="42">
+                  <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="一時停止（App Nap Plus）" Style="{StaticResource RowTitle}"
+                               Foreground="{StaticResource AmberBrush}" />
+                    <TextBlock Text="危険: 背面アプリを一時停止します。既定は OFF" Style="{StaticResource RowDesc}" />
+                  </StackPanel>
+                  <CheckBox x:Name="SuspendToggle" Style="{StaticResource ToggleSwitch}" HorizontalAlignment="Right"
+                            VerticalAlignment="Center" Checked="Feature_Changed" Unchecked="Feature_Changed"
+                            AutomationProperties.Name="一時停止" />
+                </Grid>
+                <Border Style="{StaticResource HairLine}" Margin="0,2" />
+
+                <Grid Height="38">
+                  <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="全画面表示中は操作しない" Style="{StaticResource RowTitle}" />
+                    <TextBlock Text="ゲーム・動画・プレゼンを妨げません" Style="{StaticResource RowDesc}" />
+                  </StackPanel>
+                  <CheckBox x:Name="FullscreenToggle" Style="{StaticResource ToggleSwitch}" HorizontalAlignment="Right"
+                            VerticalAlignment="Center" Checked="Feature_Changed" Unchecked="Feature_Changed"
+                            AutomationProperties.Name="全画面表示中は操作しない" />
+                </Grid>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+
+          <!-- ================= 右カラム ================= -->
+          <StackPanel Grid.Column="2">
+
+            <!-- 除外アプリ -->
+            <Border Style="{StaticResource Card}" Padding="14,12">
+              <StackPanel>
+                <Grid>
+                  <TextBlock Text="除外アプリ" Style="{StaticResource CardTitle}" />
+                  <TextBlock x:Name="ExclusionCountText" Text="0 件" HorizontalAlignment="Right"
+                             FontSize="9.5" Foreground="{StaticResource MutedTextBrush}" />
+                </Grid>
+                <TextBlock Text="これらのアプリには一切触れません（プロセス名の一部で一致）"
+                           Style="{StaticResource RowDesc}" />
+
+                <Grid Margin="0,9,0,0">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="8" />
+                    <ColumnDefinition Width="Auto" />
+                  </Grid.ColumnDefinitions>
+                  <TextBox x:Name="ExclusionInput" Grid.Column="0" Style="{StaticResource EcoTextBox}"
+                           KeyDown="ExclusionInput_KeyDown" AutomationProperties.Name="除外アプリ名" />
+                  <Button Grid.Column="2" Content="追加" Style="{StaticResource SecondaryButton}"
+                          Width="58" Height="30" Click="AddExclusion_Click"
+                          AutomationProperties.Name="除外アプリを追加" />
+                </Grid>
+
+                <Border Style="{StaticResource HairLine}" Margin="0,9,0,6" />
+
+                <TextBlock x:Name="ExclusionEmpty" Text="除外しているアプリはありません"
+                           Style="{StaticResource RowDesc}" Margin="0,2,0,2" />
+                <ScrollViewer MaxHeight="104" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                  <ItemsControl x:Name="ExclusionList">
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate>
+                        <Grid Height="26">
+                          <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                          </Grid.ColumnDefinitions>
+                          <Ellipse Width="5" Height="5" Fill="{StaticResource MutedTextBrush}"
+                                   VerticalAlignment="Center" />
+                          <TextBlock Grid.Column="1" Text="{Binding}" FontSize="10.5" Margin="8,0,0,0"
+                                     VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                          <Button Grid.Column="2" Content="削除" Style="{StaticResource GhostButton}"
+                                  FontSize="9.5" Padding="6,2" Height="20" Tag="{Binding}"
+                                  Click="RemoveExclusion_Click" />
+                        </Grid>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                </ScrollViewer>
+
+                <Button x:Name="CandidateToggleButton" Content="＋ 実行中のアプリから追加"
+                        Style="{StaticResource GhostButton}" HorizontalAlignment="Left"
+                        FontSize="10" Margin="0,4,0,0" Click="ToggleCandidates_Click" />
+
+                <Border x:Name="CandidatePanel" Visibility="Collapsed" Margin="0,4,0,0"
+                        Background="#FF101A2A" CornerRadius="10" BorderBrush="#FF263450" BorderThickness="1"
+                        Padding="6">
+                  <StackPanel>
+                    <TextBlock x:Name="CandidateEmpty" Text="実行中のアプリを取得できませんでした"
+                               Style="{StaticResource RowDesc}" Margin="6,4" />
+                    <ScrollViewer MaxHeight="120" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                      <ItemsControl x:Name="CandidateList">
+                        <ItemsControl.ItemTemplate>
+                          <DataTemplate>
+                            <Button Style="{StaticResource GhostButton}" HorizontalContentAlignment="Stretch"
+                                    Padding="6,3" Tag="{Binding Name}" Click="AddCandidate_Click">
+                              <Grid>
+                                <Grid.ColumnDefinitions>
+                                  <ColumnDefinition Width="*" />
+                                  <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding Name}" FontSize="10.5" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="1" Text="{Binding Detail}" FontSize="9"
+                                           Foreground="{StaticResource MutedTextBrush}" VerticalAlignment="Center" />
+                              </Grid>
+                            </Button>
+                          </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                      </ItemsControl>
+                    </ScrollViewer>
+                  </StackPanel>
+                </Border>
+              </StackPanel>
+            </Border>
+
+            <!-- 起動 -->
+            <Border Style="{StaticResource Card}" Padding="14,12" Margin="0,10,0,0">
+              <StackPanel>
+                <TextBlock Text="起動" Style="{StaticResource CardTitle}" />
+
+                <Grid Height="38" Margin="0,8,0,0">
+                  <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="Windows と同時に起動" Style="{StaticResource RowTitle}" />
+                    <TextBlock Text="現在のユーザーのスタートアップに登録します" Style="{StaticResource RowDesc}" />
+                  </StackPanel>
+                  <CheckBox x:Name="StartWithWindowsToggle" Style="{StaticResource ToggleSwitch}"
+                            HorizontalAlignment="Right" VerticalAlignment="Center"
+                            Checked="StartWithWindows_Changed" Unchecked="StartWithWindows_Changed"
+                            AutomationProperties.Name="Windows と同時に起動" />
+                </Grid>
+                <Border Style="{StaticResource HairLine}" Margin="0,2" />
+
+                <Grid Height="42">
+                  <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="管理者モードで起動" Style="{StaticResource RowTitle}" />
+                    <TextBlock Text="タスクスケジューラに登録します（UAC が 1 回出ます）" Style="{StaticResource RowDesc}" />
+                  </StackPanel>
+                  <CheckBox x:Name="ElevatedToggle" Style="{StaticResource ToggleSwitch}"
+                            HorizontalAlignment="Right" VerticalAlignment="Center"
+                            Checked="Elevated_Changed" Unchecked="Elevated_Changed"
+                            AutomationProperties.Name="管理者モードで起動" />
+                </Grid>
+
+                <Border Style="{StaticResource HairLine}" Margin="0,2" />
+                <TextBlock x:Name="StartupStatus" Text="" Style="{StaticResource RowDesc}" Margin="0,4,0,0"
+                           TextWrapping="Wrap" />
+              </StackPanel>
+            </Border>
+
+            <!-- 情報 -->
+            <Border Style="{StaticResource Card}" Padding="14,12" Margin="0,10,0,0">
+              <StackPanel>
+                <TextBlock Text="情報" Style="{StaticResource CardTitle}" />
+
+                <Grid Margin="0,8,0,0">
+                  <TextBlock Text="バージョン" FontSize="10" Foreground="{StaticResource SubTextBrush}" />
+                  <TextBlock x:Name="VersionText" Text="v1.0.0" HorizontalAlignment="Right" FontSize="10"
+                             Foreground="{StaticResource TextBrush}" />
+                </Grid>
+
+                <TextBlock Text="設定の保存先" FontSize="10" Foreground="{StaticResource SubTextBrush}" Margin="0,7,0,0" />
+                <TextBlock x:Name="ConfigPathText" Text="%APPDATA%\MemEco\config.json" FontSize="9"
+                           Foreground="{StaticResource MutedTextBrush}" Margin="0,2,0,0" TextWrapping="Wrap" />
+                <TextBlock Text="ログ" FontSize="10" Foreground="{StaticResource SubTextBrush}" Margin="0,7,0,0" />
+                <TextBlock x:Name="LogPathText" Text="%APPDATA%\MemEco\logs\app.log" FontSize="9"
+                           Foreground="{StaticResource MutedTextBrush}" Margin="0,2,0,0" TextWrapping="Wrap" />
+
+                <Grid Margin="0,10,0,0">
+                  <StackPanel Orientation="Horizontal">
+                    <Button Content="ログを開く" Style="{StaticResource GhostButton}" Click="OpenLogs_Click"
+                            BorderBrush="#FF263450" BorderThickness="1" FontSize="10" />
+                    <Button Content="保存先を開く" Style="{StaticResource GhostButton}" Click="OpenConfigFolder_Click"
+                            BorderBrush="#FF263450" BorderThickness="1" FontSize="10" Margin="6,0,0,0" />
+                  </StackPanel>
+                  <Button x:Name="ResetButton" Content="設定をリセット" Style="{StaticResource DangerGhostButton}"
+                          HorizontalAlignment="Right" FontSize="10" Padding="8,4" Click="Reset_Click" />
+                </Grid>
+                <TextBlock x:Name="ResetHint" Text="" Style="{StaticResource RowDesc}" Foreground="{StaticResource AmberBrush}"
+                           Margin="0,4,0,0" />
+              </StackPanel>
+            </Border>
+          </StackPanel>
+        </Grid>
+      </ScrollViewer>
+    </Grid>
+  </Border>
+</UserControl>
