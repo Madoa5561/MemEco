@@ -4,6 +4,9 @@
 [![Release](https://img.shields.io/github/v/release/Madoa5561/MemEco?display_name=tag)](https://github.com/Madoa5561/MemEco/releases/latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-4ADE80.svg)](LICENSE)
 
+🌐 **公式サイト: [memeco.moyashi.xyz](https://memeco.moyashi.xyz)**  
+（Cloudflare Pages / ソースは [`site/`](site/)）
+
 > macOS の「メモリ管理」体験を Windows 11 に。
 > 入れっぱなしで、勝手に、静かにメモリを整える常駐アプリ。
 
@@ -491,6 +494,17 @@ $exe = ".\src\MemEco.App\bin\Release\net9.0-windows\MemEco.exe"
 .\scripts\uninstall.ps1 -Purge
 ```
 
+### 公式サイトのデプロイ
+
+`site/` はビルド不要の静的サイトです。Cloudflare Pages へは次のコマンドで配信できます。
+
+```powershell
+wrangler pages deploy site --project-name memeco --branch main
+```
+
+カスタムドメイン `memeco.moyashi.xyz` は Pages プロジェクトに追加し、
+`moyashi.xyz` ゾーンへ CNAME（`memeco` → `memeco-b80.pages.dev`）を作成します。
+
 ---
 
 ## ファイル構成
@@ -511,6 +525,9 @@ docs/
   DESIGN.md       設計書
   USAGE.md        クイックリファレンス
   preview*.png    スクリーンショット
+site/
+  index.html      公式サイト（Cloudflare Pages）
+  assets/         CSS / JS / 画像 / OGP
 assets/
   icon.ico        アプリアイコン
 .github/

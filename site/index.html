@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MemEco — macOS 風のメモリ管理を Windows 11 に</title>
+  <meta name="description" content="入れっぱなしで、勝手に、静かに。Windows 11 に常駐してメモリを全自動で整えるアプリ。メモリプレッシャー表示・EcoQoS による App Nap 相当の省電力化・ワーキングセットのトリム・スタンバイ解放。MIT / 外部依存なし。" />
+  <meta name="theme-color" content="#0b111c" />
+  <link rel="canonical" href="https://memeco.moyashi.xyz/" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="MemEco" />
+  <meta property="og:url" content="https://memeco.moyashi.xyz/" />
+  <meta property="og:title" content="MemEco — macOS 風のメモリ管理を Windows 11 に" />
+  <meta property="og:description" content="入れっぱなしで、勝手に、静かに。Windows 11 用の全自動メモリ管理アプリ。MIT / 外部依存なし。" />
+  <meta property="og:image" content="https://memeco.moyashi.xyz/assets/ogp.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="MemEco — macOS 風のメモリ管理を Windows 11 に" />
+  <meta name="twitter:description" content="入れっぱなしで、勝手に、静かに。Windows 11 用の全自動メモリ管理アプリ。" />
+  <meta name="twitter:image" content="https://memeco.moyashi.xyz/assets/ogp.png" />
+
+  <link rel="icon" href="/assets/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" href="/assets/icon-256.png" />
+  <link rel="apple-touch-icon" href="/assets/icon-256.png" />
+  <link rel="stylesheet" href="/assets/style.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">本文へスキップ</a>
+
+  <div class="bg" aria-hidden="true">
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow--mint"></div>
+    <div class="bg-glow bg-glow--cyan"></div>
+  </div>
+
+  <header class="site-header" id="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="/" aria-label="MemEco ホーム">
+        <img class="brand-icon" src="/assets/icon-256.png" alt="" width="28" height="28" />
+        <span class="brand-name">MemEco</span>
+        <span class="brand-sub">メモリエコ</span>
+      </a>
+
+      <nav class="nav" id="nav" aria-label="メインナビゲーション">
+        <a href="#features">機能</a>
+        <a href="#screens">画面</a>
+        <a href="#how">仕組み</a>
+        <a href="#download">ダウンロード</a>
+        <a href="#faq">FAQ</a>
+        <a class="nav-github" href="https://github.com/Madoa5561/MemEco" target="_blank" rel="noopener">
+          <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+          GitHub
+        </a>
+      </nav>
+
+      <button class="nav-toggle" id="nav-toggle" aria-label="メニューを開く" aria-expanded="false" aria-controls="nav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ============================================================ HERO -->
+    <section class="hero wrap">
+      <div class="hero-copy">
+        <div class="badges">
+          <span class="badge badge--live"><span class="dot"></span> v1.0.0 公開中</span>
+          <span class="badge">Windows 11</span>
+          <span class="badge">MIT License</span>
+          <span class="badge">外部依存なし</span>
+        </div>
+
+        <h1>メモリを、<br /><span class="grad">macOS みたいに。</span></h1>
+        <p class="lead">
+          入れっぱなしで、勝手に、静かに。<br />
+          Windows 11 に常駐して、メモリの圧迫を見張り、背面アプリを省エネにし、
+          必要になったときだけ解放する。そんな全自動メモリ管理アプリです。
+        </p>
+
+        <div class="hero-actions">
+          <a class="btn btn--primary" href="https://github.com/Madoa5561/MemEco/releases/download/v1.0.0/MemEco-1.0.0-win-x64.exe">
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+            Windows 用をダウンロード
+            <span class="btn-note">65.7 MB・インストール不要</span>
+          </a>
+          <a class="btn btn--ghost" href="https://github.com/Madoa5561/MemEco" target="_blank" rel="noopener">
+            ソースを見る
+          </a>
+        </div>
+
+        <ul class="hero-facts">
+          <li><strong>0.07%</strong> アイドル CPU</li>
+          <li><strong>78 MB</strong> 常駐メモリ</li>
+          <li><strong>17/17</strong> 合格テスト</li>
+          <li><strong>0</strong> 外部ライブラリ</li>
+        </ul>
+      </div>
+
+      <div class="hero-visual">
+        <div class="shot-frame">
+          <div class="shot-bar" aria-hidden="true">
+            <span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-dot"></span>
+            <span class="shot-title">MemEco</span>
+          </div>
+          <img src="/assets/preview-main.png" width="440" height="680" alt="MemEco のメインパネル。メモリプレッシャー、メモリ内訳、全自動メモリ管理のトグル、プリセット、エコ管理中のアプリ一覧を表示している。" />
+        </div>
+
+        <div class="float-card float-card--a" aria-hidden="true">
+          <span class="float-label">解放量（実測）</span>
+          <span class="float-value grad">418 MB</span>
+        </div>
+        <div class="float-card float-card--b" aria-hidden="true">
+          <span class="float-label">メモリプレッシャー</span>
+          <span class="float-value float-value--ok">余裕あり</span>
+        </div>
+        <div class="float-card float-card--c" aria-hidden="true">
+          <span class="float-label">Eco 管理</span>
+          <span class="float-value">5 アプリ</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ TRUST -->
+    <section class="strip wrap" aria-label="概要">
+      <div class="strip-item">
+        <span class="strip-k">対応 OS</span>
+        <span class="strip-v">Windows 11（Build 22000+）</span>
+      </div>
+      <div class="strip-item">
+        <span class="strip-k">配布形式</span>
+        <span class="strip-v">単一 exe・インストール不要</span>
+      </div>
+      <div class="strip-item">
+        <span class="strip-k">ライセンス</span>
+        <span class="strip-v">MIT（オープンソース）</span>
+      </div>
+      <div class="strip-item">
+        <span class="strip-k">技術</span>
+        <span class="strip-v">.NET 9 / WPF・NuGet 依存なし</span>
+      </div>
+    </section>
+
+    <!-- ============================================================ FEATURES -->
+    <section class="section wrap" id="features">
+      <div class="section-head">
+        <p class="eyebrow">FEATURES</p>
+        <h2>macOS の心地よさを、Windows の作法で。</h2>
+        <p class="section-lead">
+          macOS のメモリ管理をそのまま真似るのではなく、Windows 11 が持つ
+          ネイティブな仕組みに置き換えています。アプリを止めずに、必要なときだけ動きます。
+        </p>
+      </div>
+
+      <div class="cards">
+        <article class="card">
+          <div class="card-icon card-icon--mint">
+            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M12 3a9 9 0 1 0 9 9"/><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M12 8v4l3 2"/></svg>
+          </div>
+          <h3>メモリプレッシャー</h3>
+          <p>空きメモリ・コミット・メモリ圧縮ストアから 0〜100% の「圧迫度」を算出。トレイの色とリングで一目でわかります。</p>
+          <p class="card-meta">macOS のメモリプレッシャー相当</p>
+        </article>
+
+        <article class="card">
+          <div class="card-icon card-icon--cyan">
+            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 3v18M5 7l7-4 7 4M5 17l7 4 7-4"/></svg>
+          </div>
+          <h3>EcoQoS で App Nap 相当</h3>
+          <p>前面にないアプリを Windows 11 の効率モード（EcoQoS）と低めの優先度に。CPU を省エネ寄りに動かします。</p>
+          <p class="card-meta">アプリは止めません</p>
+        </article>
+
+        <article class="card">
+          <div class="card-icon card-icon--mint">
+            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h10M4 17h6"/><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="m17 15 3 3-3 3"/></svg>
+          </div>
+          <h3>ワーキングセットのトリム</h3>
+          <p>圧迫度が「注意」以上のとき、対象アプリの作業領域を解放。解放した量は必ず実測して表示します。</p>
+          <p class="card-meta">見かけの数字は作りません</p>
+        </article>
+
+        <article class="card">
+          <div class="card-icon card-icon--cyan">
+            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 5h16v10H4zM8 19h8M12 15v4"/></svg>
+          </div>
+          <h3>スタンバイリストの解放</h3>
+          <p>管理者モードのときだけ、未使用のスタンバイメモリを解放（purge 相当）。標準モードでは安全にスキップします。</p>
+          <p class="card-meta">管理者モード限定</p>
+        </article>
+
+        <article class="card">
+          <div class="card-icon card-icon--violet">
+            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M9 6v12M15 6v12"/><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 9v6m16-6v6"/></svg>
+          </div>
+          <h3>App Nap Plus</h3>
+          <p>圧迫度が「危険」のときだけ、条件を満たす背面プロセスを一時停止。前面化・最大時間・終了時に必ず復帰します。</p>
+          <p class="card-meta">既定 OFF・上級者向け</p>
+        </article>
+
+        <article class="card">
+          <div class="card-icon card-icon--mint">
+            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 3v3m0 12v3M3 12h3m12 0h3M5.6 5.6l2.1 2.1m8.6 8.6 2.1 2.1m0-12.8-2.1 2.1M7.7 16.3l-2.1 2.1"/><circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+          </div>
+          <h3>全自動・3 プリセット</h3>
+          <p>2 秒ごとに状態を判定し、必要なときだけ動きます。「やさしい / 標準 / 積極的」から選ぶだけ。</p>
+          <p class="card-meta">既定のままでも動きます</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============================================================ MAPPING -->
+    <section class="section wrap" id="mapping">
+      <div class="section-head">
+        <p class="eyebrow">MACOS &rarr; WINDOWS</p>
+        <h2>同じ体験を、別の実装で。</h2>
+      </div>
+      <div class="table-wrap">
+        <table class="map-table">
+          <thead>
+            <tr><th scope="col">macOS</th><th scope="col">MemEco（Windows 11）</th><th scope="col">補足</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>メモリプレッシャー表示</td><td>圧迫度スコアを算出してリング／トレイ色で表示</td><td>空き・コミット・圧縮ストアから計算</td></tr>
+            <tr><td>App Nap</td><td>EcoQoS + 優先度 BelowNormal</td><td>アプリは停止しない</td></tr>
+            <tr><td>メモリ圧縮</td><td>Windows 標準の Memory Compression を監視・表示</td><td>OS 機能を再実装はしない</td></tr>
+            <tr><td>purge / メモリ解放</td><td>ワーキングセットのトリム + スタンバイ解放</td><td>解放量は実測</td></tr>
+            <tr><td>低メモリ時の退避</td><td>App Nap Plus（一時停止）</td><td>既定 OFF・必ず復帰</td></tr>
+            <tr><td>スワップ監視</td><td>コミットチャージ・ページファイルを監視</td><td>&mdash;</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============================================================ SCREENS -->
+    <section class="section wrap" id="screens">
+      <div class="section-head">
+        <p class="eyebrow">SCREENSHOTS</p>
+        <h2>静かなのに、ちゃんと見える。</h2>
+        <p class="section-lead">トレイに常駐し、左クリックでパネル。必要な情報だけを、落ち着いたトーンで。</p>
+      </div>
+
+      <div class="screens">
+        <figure class="screen screen--main">
+          <img src="/assets/preview-main.png" width="440" height="680" alt="メインパネル。メモリプレッシャーのリング、利用可能メモリ、コミット、メモリ内訳、推移グラフ、全自動メモリ管理のスイッチ、3 つのプリセット、今すぐ解放ボタン。" loading="lazy" />
+          <figcaption>メインパネル（440 &times; 680）</figcaption>
+        </figure>
+        <figure class="screen screen--settings">
+          <img src="/assets/preview-settings.png" width="720" height="640" alt="設定画面。全自動メモリ管理、プリセット、しきい値、機能スイッチ、除外アプリ、起動設定、情報。" loading="lazy" />
+          <figcaption>設定（720 &times; 640）</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ============================================================ METRICS -->
+    <section class="section wrap" id="metrics">
+      <div class="metrics">
+        <div class="metric">
+          <span class="metric-value grad">0.07<span class="unit">%</span></span>
+          <span class="metric-label">アイドル CPU（28 コア平均）</span>
+        </div>
+        <div class="metric">
+          <span class="metric-value">78.1<span class="unit">MB</span></span>
+          <span class="metric-label">常駐ワーキングセット</span>
+        </div>
+        <div class="metric">
+          <span class="metric-value grad">418<span class="unit">MB</span></span>
+          <span class="metric-label">トリム実測（300MB ホッグ &rarr; 0）</span>
+        </div>
+        <div class="metric">
+          <span class="metric-value">47<span class="unit">ms</span></span>
+          <span class="metric-label">402 プロセスの走査時間</span>
+        </div>
+      </div>
+      <p class="metrics-note">
+        実測環境: Windows 11 Build 26200 / Intel Core i7-14700F / 31.7 GB / 標準ユーザー。
+        受入検証 17 項目すべて PASS（ビルドは警告 0・エラー 0）。
+      </p>
+    </section>
+
+    <!-- ============================================================ HOW / SAFETY -->
+    <section class="section wrap" id="how">
+      <div class="section-head">
+        <p class="eyebrow">HOW IT WORKS</p>
+        <h2>賢いのは、踏み込まないこと。</h2>
+        <p class="section-lead">
+          MemEco は「触ってはいけないもの」を先に決めています。迷ったら保護する。それが安全の基本です。
+        </p>
+      </div>
+
+      <div class="steps">
+        <article class="step">
+          <span class="step-no">01</span>
+          <h3>見張る</h3>
+          <p>2 秒ごとにメモリの圧迫度を計測。プロセスの走査は数秒に 1 回、47 ms 程度で終わります。</p>
+        </article>
+        <article class="step">
+          <span class="step-no">02</span>
+          <h3>判断する</h3>
+          <p>圧迫度・前面／可視ウィンドウ・音声再生・アイドル時間から、本当に手を入れてよい相手だけを選びます。</p>
+        </article>
+        <article class="step">
+          <span class="step-no">03</span>
+          <h3>必要な分だけ動く</h3>
+          <p>EcoQoS &rarr; トリム &rarr; スタンバイ解放 &rarr; （任意で）一時停止。すべて元に戻せる操作です。</p>
+        </article>
+      </div>
+
+      <div class="safety">
+        <div class="safety-card">
+          <h3>触らないもの</h3>
+          <ul>
+            <li>システムの中核プロセス</li>
+            <li>前面のアプリ・可視ウィンドウ</li>
+            <li>音声を再生中のアプリ</li>
+            <li>管理者権限で動作中のプロセス</li>
+            <li>起動 60 秒未満・子プロセス持ち</li>
+            <li>ユーザーが指定した除外リスト</li>
+          </ul>
+        </div>
+        <div class="safety-card">
+          <h3>必ず戻す</h3>
+          <ul>
+            <li>一時停止は前面化で即復帰</li>
+            <li>最大時間を超えたら強制復帰</li>
+            <li>アプリ終了・設定 OFF でも復帰</li>
+            <li>優先度は元の値に戻す</li>
+            <li>停止中のまま放置しない</li>
+          </ul>
+        </div>
+        <div class="safety-card">
+          <h3>守る時間</h3>
+          <ul>
+            <li>全画面ゲーム・プレゼン中は操作休止</li>
+            <li>例外が出てもループを止めない</li>
+            <li>権限がない操作は静かにスキップ</li>
+            <li>ログに残して原因を追える</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ DOWNLOAD -->
+    <section class="section wrap" id="download">
+      <div class="section-head">
+        <p class="eyebrow">DOWNLOAD</p>
+        <h2>ダウンロード</h2>
+        <p class="section-lead">単一の exe です。インストール不要で、そのまま起動できます。</p>
+      </div>
+
+      <div class="download">
+        <article class="download-card download-card--primary">
+          <div class="download-head">
+            <span class="chip chip--mint">おすすめ</span>
+            <h3>自己完結版</h3>
+          </div>
+          <p class="download-file">MemEco-1.0.0-win-x64.exe</p>
+          <p class="download-size">65.7 MB・.NET ランタイム不要</p>
+          <a class="btn btn--primary btn--wide" href="https://github.com/Madoa5561/MemEco/releases/download/v1.0.0/MemEco-1.0.0-win-x64.exe">
+            ダウンロード
+          </a>
+          <p class="download-hint">初めての方はこちら。</p>
+        </article>
+
+        <article class="download-card">
+          <div class="download-head">
+            <span class="chip">軽量</span>
+            <h3>framework-dependent 版</h3>
+          </div>
+          <p class="download-file">MemEco-1.0.0-win-x64-fd.exe</p>
+          <p class="download-size">0.49 MB・.NET 9 デスクトップランタイムが必要</p>
+          <a class="btn btn--ghost btn--wide" href="https://github.com/Madoa5561/MemEco/releases/download/v1.0.0/MemEco-1.0.0-win-x64-fd.exe">
+            ダウンロード
+          </a>
+          <p class="download-hint">.NET 9 が入っている方向け。</p>
+        </article>
+      </div>
+
+      <div class="download-foot">
+        <a href="https://github.com/Madoa5561/MemEco/releases/tag/v1.0.0" target="_blank" rel="noopener">GitHub Releases</a>
+        <span class="sep">&middot;</span>
+        <a href="https://github.com/Madoa5561/MemEco/releases/download/v1.0.0/SHA256SUMS.txt" target="_blank" rel="noopener">SHA-256 チェックサム</a>
+        <span class="sep">&middot;</span>
+        <a href="https://github.com/Madoa5561/MemEco" target="_blank" rel="noopener">ソースコード（MIT）</a>
+      </div>
+      <p class="download-note">
+        コード署名は行っていないため、初回起動時に Windows SmartScreen の警告が出る場合があります。
+        「詳細情報」&rarr;「実行」で起動できます。配布物はすべて GitHub Actions でビルドされています。
+      </p>
+    </section>
+
+    <!-- ============================================================ START -->
+    <section class="section wrap" id="start">
+      <div class="section-head">
+        <p class="eyebrow">QUICK START</p>
+        <h2>はじめかたは、3 ステップ。</h2>
+      </div>
+      <ol class="start-steps">
+        <li>
+          <span class="start-no">1</span>
+          <h3>ダウンロードして起動</h3>
+          <p>exe をダブルクリック。トレイに常駐し、初回だけパネルが開きます。</p>
+        </li>
+        <li>
+          <span class="start-no">2</span>
+          <h3>そのまま使う</h3>
+          <p>既定は「標準」プリセット。設定を変えなくても、必要なときだけ動きます。</p>
+        </li>
+        <li>
+          <span class="start-no">3</span>
+          <h3>必要なら管理者モード</h3>
+          <p>設定画面から「管理者モードで起動」をオンにすると、スタンバイ解放も使えます（UAC 1 回）。</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ============================================================ FAQ -->
+    <section class="section wrap" id="faq">
+      <div class="section-head">
+        <p class="eyebrow">FAQ</p>
+        <h2>よくある質問</h2>
+      </div>
+
+      <div class="faq">
+        <details>
+          <summary>管理者権限は必要ですか？</summary>
+          <p>基本的な機能（EcoQoS・トリム）は標準ユーザーでも動作します。スタンバイリストの解放だけが管理者権限を必要とします。</p>
+        </details>
+        <details>
+          <summary>メモリ圧縮はしてくれますか？</summary>
+          <p>Windows には標準でメモリ圧縮（Memory Compression）があります。MemEco はそれを監視・表示し、追加の解放を行います。OS の圧縮機能を置き換えるものではありません。</p>
+        </details>
+        <details>
+          <summary>アプリが止まったり、動作が重くなったりしませんか？</summary>
+          <p>EcoQoS はアプリを停止せず、CPU の使い方を省エネ寄りにするだけです。一時停止（App Nap Plus）は既定で OFF で、「積極的」プリセットで有効にした場合のみ動作します。</p>
+        </details>
+        <details>
+          <summary>ウイルス対策ソフトに誤検知されませんか？</summary>
+          <p>コード署名は行っていません。ソースコードは MIT ライセンスで公開しています。配布 exe は GitHub Actions でビルドした成果物で、SHA-256 を Releases に添付しています。</p>
+        </details>
+        <details>
+          <summary>アンインストール方法は？</summary>
+          <p>トレイメニューから終了し、Windows の「アプリと機能」または設定画面の「スタートアップ」から自動起動を外してください。スクリプト版（install.ps1 / uninstall.ps1）も同梱しています。</p>
+        </details>
+        <details>
+          <summary>Windows 10 でも使えますか？</summary>
+          <p>対象は Windows 11（Build 22000 以降）です。EcoQoS など Windows 11 の API を前提にしています。</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- ============================================================ CTA -->
+    <section class="cta wrap">
+      <div class="cta-inner">
+        <h2>入れっぱなしで、勝手に、静かに。</h2>
+        <p>MemEco は無料・MIT ライセンスのオープンソースです。</p>
+        <div class="hero-actions hero-actions--center">
+          <a class="btn btn--primary" href="https://github.com/Madoa5561/MemEco/releases/download/v1.0.0/MemEco-1.0.0-win-x64.exe">ダウンロード</a>
+          <a class="btn btn--ghost" href="https://github.com/Madoa5561/MemEco" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <div class="footer-brand">
+        <img src="/assets/icon-256.png" alt="" width="24" height="24" />
+        <span>MemEco</span>
+      </div>
+      <nav class="footer-nav" aria-label="フッターナビゲーション">
+        <a href="https://github.com/Madoa5561/MemEco" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://github.com/Madoa5561/MemEco/releases" target="_blank" rel="noopener">Releases</a>
+        <a href="https://github.com/Madoa5561/MemEco/issues" target="_blank" rel="noopener">Issues</a>
+        <a href="https://github.com/Madoa5561/MemEco/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>
+        <a href="https://github.com/Madoa5561/MemEco/blob/main/README.md" target="_blank" rel="noopener">README</a>
+      </nav>
+      <p class="footer-copy">&copy; 2026 MemEco / Madoa5561 &middot; moyashi.xyz</p>
+    </div>
+  </footer>
+
+  <script src="/assets/app.js" defer></script>
+</body>
+</html>
